@@ -136,44 +136,8 @@ void  threadUnity(void *para)
 	
 
 }
-
-//void detectFaceRGBA(Color_32 *pImg, int width, int height, int &numMarks,
-//	float p2D[], float p3D[], float pPose[], char *pFaceImgPath, Color_32 *pFaceTexture)
-//{
-//	if (gThreadInit == 0)
-//	{
-//		_beginthread(threadUnity, 0, NULL);
-//		gThreadInit = 1;
-//	}
-//	if (gFlag == 1)
-//	{
-//		using namespace cv;
-//		uchar *pImgRaw = (uchar*)pImg;
-//		Mat img(Size(width, height), CV_8UC4, pImgRaw);
-//		cvtColor(gClrImg, img, CV_BGR2RGBA);
-//		numMarks = gNumMarks;
-//		memcpy(p2D, gp2D, numMarks * 2 * sizeof(float));
-//		memcpy(p3D, gp3D, numMarks * 3 * sizeof(float));
-//		memcpy(pPose, gpPose, 6 * sizeof(float));
-//		if (gNumMarks >= 66)
-//		{
-//			
-//			if (pFaceImgPath)
-//			{
-//				saveFaceImgToFile(gFacePng, pFaceImgPath);
-//			}
-//			if (pFaceTexture)
-//			{
-//				uchar *pDst = (uchar *)pFaceTexture;
-//				Mat tempPng;
-//				cvtColor(gFacePng, tempPng, CV_BGRA2RGBA);
-//				memcpy(pDst, tempPng.data, tempPng.cols*tempPng.rows*tempPng.channels());
-//			}
-//		}
-//		gFlag = 0;
-//	}
-//
-//}
+cv::Mat gSmoothTextureImg;
+unsigned char *gTextureData = 0;
 void detectFaceRGBA(Color_32 *pImg, int width, int height, int &numMarks,
 					float p2D[], float p3D[], float pPose[], char *pFaceImgPath,Color_32 *pFaceTexture)
 {
@@ -190,9 +154,9 @@ void detectFaceRGBA(Color_32 *pImg, int width, int height, int &numMarks,
 	}
 
 	using namespace cv;
-	uchar *pImgRaw = (uchar*)pImg;
+	/*uchar *pImgRaw = (uchar*)pImg;
 	Mat img(Size(width, height), CV_8UC4, pImgRaw);
-
+*/
 
 
 	Mat clrImg;
@@ -204,8 +168,10 @@ void detectFaceRGBA(Color_32 *pImg, int width, int height, int &numMarks,
 	}
 	
 	gFilter.processImage(clrImg);
-	cvtColor(clrImg, img, CV_BGR2RGBA);
+	//cvtColor(clrImg, img, CV_BGR2RGBA);
+	cvtColor(clrImg, gSmoothTextureImg, CV_BGR2RGBA);
 
+	gTextureData = gSmoothTextureImg.data;
 	//flip(clrImg, clrImg, 0);
 
 	Mat gray;
@@ -232,10 +198,10 @@ void detectFaceRGBA(Color_32 *pImg, int width, int height, int &numMarks,
 	}
 		
 
-	if (gFaceDetector.mIsInited)
+	/*if (gFaceDetector.mIsInited)
 	{
 		gFaceDetector.drawResult(clrImg);
-	}
+	}*/
 		
 	//imshow("result", clrImg);
 	//waitKey(1);

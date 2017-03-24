@@ -19,9 +19,8 @@ int main()
 	if (!video_capture.open(0))
 		return -1;
 
-	video_capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
-
-	video_capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+	/*video_capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
+	video_capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);*/
 	Mat img;
 	video_capture >> img;
 

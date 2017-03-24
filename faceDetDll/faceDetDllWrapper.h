@@ -35,6 +35,7 @@ extern "C" __declspec(dllexport)
 void detectFaceRGB(unsigned char *pImg, int width, int height, int &numMarks, float p2D[], float p3D[], float pPose[],char *pFaceImgPath);
 
 
+
 extern "C" __declspec(dllexport)
 void uinitFaceDetector();
 
