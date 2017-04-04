@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "faceDetDll", "faceDetDll\fa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dllTester", "dllTester\dllTester.vcxproj", "{C8247918-0FDB-4BA7-B82B-535A17292071}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pencilSketchTest", "pencilSketchTest\pencilSketchTest.vcxproj", "{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -55,6 +57,14 @@ Global
 		{C8247918-0FDB-4BA7-B82B-535A17292071}.Release|Win32.Build.0 = Release|Win32
 		{C8247918-0FDB-4BA7-B82B-535A17292071}.Release|x64.ActiveCfg = Release|x64
 		{C8247918-0FDB-4BA7-B82B-535A17292071}.Release|x64.Build.0 = Release|x64
+		{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC}.Debug|Win32.Build.0 = Debug|Win32
+		{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC}.Debug|x64.ActiveCfg = Debug|x64
+		{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC}.Debug|x64.Build.0 = Debug|x64
+		{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC}.Release|Win32.ActiveCfg = Release|Win32
+		{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC}.Release|Win32.Build.0 = Release|Win32
+		{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC}.Release|x64.ActiveCfg = Release|x64
+		{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,5 +74,6 @@ Global
 		{BDC1D107-DE17-4705-8E7B-CDDE8BFB2BF8} = {99FEBA13-BDDF-4076-B57E-D8EF4076E20D}
 		{2E39EC17-44A9-4093-A671-B664604FFFBE} = {9961DDAC-BE6E-4A6E-8EEF-FFC7D67BD631}
 		{C8247918-0FDB-4BA7-B82B-535A17292071} = {9961DDAC-BE6E-4A6E-8EEF-FFC7D67BD631}
+		{8F3A7F0E-AFD9-4DCA-AA36-F7E59F48DFEC} = {9961DDAC-BE6E-4A6E-8EEF-FFC7D67BD631}
 	EndGlobalSection
 EndGlobal
