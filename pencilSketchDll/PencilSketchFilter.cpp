@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+
 #include "PencilSketchFilter.h"
 using namespace cv;
 
@@ -35,8 +35,8 @@ void PencilSketchFilter::gradientImage(Mat grayImg,Mat &gradImg)
 void PencilSketchFilter::processImage(cv::Mat srcImg, cv::Mat &pencilImg)
 {
 
-	Mat grayImg;
-	cvtColor(srcImg,grayImg,COLOR_BGR2GRAY);
+	Mat grayImg = srcImg;
+	//cvtColor(srcImg,grayImg,COLOR_BGR2GRAY);
 
 	Mat ivtImg;
 	addWeighted(grayImg,-1,NULL,0,255,ivtImg);	

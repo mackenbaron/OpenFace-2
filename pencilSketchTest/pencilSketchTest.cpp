@@ -2,7 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "PencilSketchFilter.h"
+#include "pencilSketchDll.h"
+#include <opencv2\opencv.hpp>
 using namespace cv;
 int main()
 {
@@ -12,12 +13,15 @@ int main()
 
 	Mat img;
 	cap >> img;
-	PencilSketchFilter sketchFilter;
+	
 	while (img.data)
 	{
+		Mat gray;
+		cvtColor(img, gray, COLOR_BGR2GRAY);
+
+		Mat result=gray.clone();
 		
-		Mat result;
-		sketchFilter.processImage(img, result);
+		processGrayImg(gray.data, gray.cols, gray.rows, result.data);
 		imshow("result", result);
 		char c = waitKey(1);
 		if (c == 27 || c == 'q')

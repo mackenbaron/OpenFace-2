@@ -15,21 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="pencilSketchDll.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="PencilSketchFilter.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="pencilSketchDll.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="pencilSketchTest.cpp">
+    <ClCompile Include="PencilSketchFilter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
