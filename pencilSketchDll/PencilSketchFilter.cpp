@@ -1,6 +1,8 @@
 
 #include "PencilSketchFilter.h"
+
 using namespace cv;
+
 
 PencilSketchFilter::PencilSketchFilter(void)
 {

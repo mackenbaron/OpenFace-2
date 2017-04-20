@@ -21,12 +21,18 @@
     <ClInclude Include="PencilSketchFilter.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="KinectWrapper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pencilSketchDll.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="PencilSketchFilter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KinectWrapper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

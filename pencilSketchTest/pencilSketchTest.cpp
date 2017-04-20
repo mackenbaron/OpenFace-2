@@ -7,27 +7,22 @@
 using namespace cv;
 int main()
 {
-	VideoCapture cap;
-	if (!cap.open(0))
-		return -1;
-
-	Mat img;
-	cap >> img;
 	
-	while (img.data)
-	{
-		Mat gray;
-		cvtColor(img, gray, COLOR_BGR2GRAY);
+	
+	Mat result = Mat::zeros(Size(200, 360), CV_8UC1);
 
-		Mat result=gray.clone();
+	while (1)
+	{
 		
-		processGrayImg(gray.data, gray.cols, gray.rows, result.data);
+		
+		processGrayImg(0, result.cols, result.rows, result.data);
+
 		imshow("result", result);
 		char c = waitKey(1);
 		if (c == 27 || c == 'q')
 			break;
 
-		cap >> img;
+		//cap >> img;
 
 	}
     return 0;

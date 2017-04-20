@@ -1,25 +1,60 @@
 #include "pencilSketchDll.h"
 #include "PencilSketchFilter.h"
+#include "KinectWrapper.h"
+#include <process.h>
+#include <Windows.h>
+KinectWrapper gKinect;
+cv::Mat gBodyImg;
+
+int gInit = 0;
+
+void  kinectThread(void *para)
+{
+	/*while(1)
+		gKinect.Update();*/
+}
+int initKinect()
+{
+	int isok=gKinect.InitializeDefaultSensor();
+	if (!isok)
+	{
+		printf("kinect init failed\n");
+		return -1;
+	}
+	_beginthread(kinectThread, 0, NULL);
+	gInit = 1;
+	return 1;
+}
 
 
+extern "C" __declspec(dllexport)
 void processRGBATexture(Color_32 *pTexImg, int width, int height, Color_32 *pFilterTexture)
 {
-	
-
 	using namespace cv;
+	if (!gInit)
+	{
+		initKinect();
+		
+	}
+
 	
-	Mat img(Size(width, height), CV_8UC4, pTexImg);
+//	gKinect.Update();
+	
+	if (gKinect.mBodyPng.data == nullptr)
+		return;
+	Mat bodyPng = gKinect.mBodyPng.clone();
+	resize(bodyPng, bodyPng, Size(width, height));
 
 	Mat grayImg;
-	cvtColor(img, grayImg, COLOR_RGBA2GRAY);
+	cvtColor(bodyPng, grayImg, COLOR_RGBA2GRAY);
 
 	Mat filterImg;
 
 	PencilSketchFilter sketchFilter;
 	sketchFilter.processImage(grayImg, filterImg);
 
-	Mat filterdTex(img.size(), CV_8UC4, pFilterTexture);
-	img.copyTo(filterdTex);
+	Mat filterdTex(grayImg.size(), CV_8UC4, pFilterTexture);
+	bodyPng.copyTo(filterdTex);
 
 	for (int r = 0; r < height; r++)
 	{
@@ -41,16 +76,33 @@ void processGrayImg(unsigned char *pGrayImg, int width, int height, unsigned cha
 
 	using namespace cv;
 
-	Mat grayImg(Size(width, height), CV_8UC1, pGrayImg);
+	if (!gInit)
+	{
+		//initKinect();
+		int isok=gKinect.InitializeDefaultSensor();
+		if (!isok)
+		{
+			printf("kinect init failed\n");
+			
+		}
+		gInit = 1;
+		gBodyImg = cv::Mat::zeros(Size(width, height), CV_8UC4);
+	}
+
+	int isUpdated = gKinect.Update(gBodyImg);
+	if (!isUpdated)
+		return;
+
+	Mat grayImg;
+	cvtColor(gBodyImg, grayImg, COLOR_RGBA2GRAY);
+	
+	
+	PencilSketchFilter sketchFilter;
+	Mat filterImgOut(grayImg.size(), CV_8UC1, pFilterImg);
+	sketchFilter.processImage(grayImg, filterImgOut);
 
 	
-	Mat filterImg;
-
-	PencilSketchFilter sketchFilter;
-	sketchFilter.processImage(grayImg, filterImg);
-
-	Mat filterImgOut(grayImg.size(), CV_8UC1, pFilterImg);
-	filterImg.copyTo(filterImgOut);
+	//filterImg.copyTo(filterImgOut);
 
 
 }

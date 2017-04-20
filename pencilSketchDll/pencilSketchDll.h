@@ -17,6 +17,8 @@ void processRGBATexture(Color_32 *pTexImg, int width, int height,Color_32 *pFilt
 extern "C" __declspec(dllexport)
 void processGrayImg(unsigned char *pGrayImg, int width, int height, unsigned char *pFilterImg );
 
+extern "C" __declspec(dllexport)
+void initKinectSensor(void **pSensor);
 
 #endif
 
