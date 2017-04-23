@@ -478,7 +478,7 @@ void KinectWrapper::extractIPImage(cv::Mat img, std::vector<cv::Point> &srcConto
 
 void KinectWrapper::initMemBuffer()
 {
-	mpMask = new BYTE[cColorWidth*cColorHeight];
+	m_pBodyMask = new BYTE[cColorWidth*cColorHeight];
 	m_pOutputRGBX = new RGBQUAD[cColorWidth * cColorHeight];
 
 	// create heap storage for background image pixel data in RGBX format

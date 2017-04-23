@@ -3,8 +3,9 @@
 #include "KinectWrapper.h"
 #include <process.h>
 #include <Windows.h>
+#include "KinectBodyCropper.h"
 KinectWrapper gKinect;
-cv::Mat gBodyImg;
+KinectBodyCropper gKinectCropper;
 
 int gInit = 0;
 
@@ -31,35 +32,43 @@ extern "C" __declspec(dllexport)
 void processRGBATexture(Color_32 *pTexImg, int width, int height, Color_32 *pFilterTexture)
 {
 	using namespace cv;
+	memset(pFilterTexture, 0, width*height * sizeof(Color_32));
+
 	if (!gInit)
 	{
-		initKinect();
-		
+		//initKinect();
+		int isok = gKinect.InitializeDefaultSensor();
+		if (!isok)
+		{
+			printf("kinect init failed\n");
+
+		}
+		gInit = 1;
+
 	}
 
-	
-//	gKinect.Update();
-	
-	if (gKinect.mBodyPng.data == nullptr)
+	int isUpdated = gKinect.Update();
+	if (!isUpdated)
 		return;
-	Mat bodyPng = gKinect.mBodyPng.clone();
-	resize(bodyPng, bodyPng, Size(width, height));
+
+	int hasBody = gKinectCropper.extractBodyImg(gKinect.m_pBodyMask,
+		(uchar*)gKinect.m_pColorRGBX, gKinect.cColorWidth, gKinect.cColorHeight);
+
+	if (!hasBody)
+		return;
 
 	Mat grayImg;
-	cvtColor(bodyPng, grayImg, COLOR_RGBA2GRAY);
+	cvtColor(gKinectCropper.mOutBodyImg, grayImg, COLOR_RGBA2GRAY);
 
-	Mat filterImg;
-
-	PencilSketchFilter sketchFilter;
-	sketchFilter.processImage(grayImg, filterImg);
-
-	Mat filterdTex(grayImg.size(), CV_8UC4, pFilterTexture);
-	bodyPng.copyTo(filterdTex);
-
+	PencilSketchFilter sketchFilter;	
+	Mat tempFiltered;
+	sketchFilter.processImage(grayImg, tempFiltered);
+	
+	Mat bodyPng = gKinectCropper.mOutBodyImg.clone();
 	for (int r = 0; r < height; r++)
 	{
-		uchar *pDst = filterdTex.ptr<uchar>(r);
-		uchar *pSrc = filterImg.ptr<uchar>(r);
+		uchar *pDst = bodyPng.ptr<uchar>(r);
+		uchar *pSrc = tempFiltered.ptr<uchar>(r);
 		for (int c = 0; c < width; c++)
 		{
 			//update R/G/B
@@ -68,6 +77,13 @@ void processRGBATexture(Color_32 *pTexImg, int width, int height, Color_32 *pFil
 			pDst[4 * c + 2] = pSrc[c];
 		}
 	}
+
+	Mat filterImgOut(Size(width, height), CV_8UC4, (uchar*)pFilterTexture);
+	resize(bodyPng, filterImgOut, filterImgOut.size());
+
+	//imshow("bodypng", bodyPng);
+
+	//printf("has body ...............\n");
 
 }
 extern "C" __declspec(dllexport)
@@ -86,23 +102,26 @@ void processGrayImg(unsigned char *pGrayImg, int width, int height, unsigned cha
 			
 		}
 		gInit = 1;
-		gBodyImg = cv::Mat::zeros(Size(width, height), CV_8UC4);
+		
 	}
 
-	int isUpdated = gKinect.Update(gBodyImg);
+	int isUpdated = gKinect.Update();
 	if (!isUpdated)
 		return;
 
-	Mat grayImg;
-	cvtColor(gBodyImg, grayImg, COLOR_RGBA2GRAY);
+	int hasBody = gKinectCropper.extractBodyImg(gKinect.m_pBodyMask, 
+					(uchar*)gKinect.m_pColorRGBX, gKinect.cColorWidth, gKinect.cColorHeight);
 	
-	
-	PencilSketchFilter sketchFilter;
-	Mat filterImgOut(grayImg.size(), CV_8UC1, pFilterImg);
-	sketchFilter.processImage(grayImg, filterImgOut);
+	if (hasBody)
+	{
+		Mat grayImg;
+		cvtColor(gKinectCropper.mOutBodyImg, grayImg, COLOR_RGBA2GRAY);
 
-	
-	//filterImg.copyTo(filterImgOut);
-
+		PencilSketchFilter sketchFilter;
+		Mat filterImgOut(Size(width,height), CV_8UC1, pFilterImg);
+		Mat tempFiltered;
+		sketchFilter.processImage(grayImg, tempFiltered);
+		resize(tempFiltered, filterImgOut,filterImgOut.size());
+	}
 
 }

@@ -28,7 +28,7 @@ public:
 	RGBQUAD*                m_pBackgroundRGBX;
 	RGBQUAD*                m_pColorRGBX;
 
-	BYTE *mpMask;
+	BYTE *m_pBodyMask;
 
 	cv::Mat mBodyPng;
 

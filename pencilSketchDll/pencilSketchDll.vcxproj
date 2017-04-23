@@ -155,11 +155,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="KinectBodyCropper.h" />
     <ClInclude Include="KinectWrapper.h" />
     <ClInclude Include="pencilSketchDll.h" />
     <ClInclude Include="PencilSketchFilter.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="KinectBodyCropper.cpp" />
     <ClCompile Include="KinectWrapper.cpp" />
     <ClCompile Include="pencilSketchDll.cpp" />
     <ClCompile Include="PencilSketchFilter.cpp" />

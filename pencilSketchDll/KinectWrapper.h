@@ -26,11 +26,9 @@ public:
 	// Frame reader
 	IMultiSourceFrameReader*m_pMultiSourceFrameReader;
 
-	RGBQUAD*                m_pOutputRGBX;
-	RGBQUAD*                m_pBackgroundRGBX;
 	RGBQUAD*                m_pColorRGBX;
 
-	BYTE *mpMask;
+	BYTE *m_pBodyMask;
 
 	cv::Mat mBodyPng;
 	int mIsInit;
@@ -39,10 +37,7 @@ public:
 	/// <summary>
 	/// Main processing function
 	/// </summary>
-	int    Update(cv::Mat &bodyImg);
-
-	cv::Mat getBodyImage();
-
+	int    Update();
 
 	int InitializeDefaultSensor();
 	void initMemBuffer();
@@ -50,8 +45,6 @@ public:
 	void  processFrame(INT64 nTime,
 		const UINT16* pDepthBuffer, int nDepthWidth, int nDepthHeight,
 		const RGBQUAD* pColorBuffer, int nColorWidth, int nColorHeight,
-		const BYTE* pBodyIndexBuffer, int nBodyIndexWidth, int nBodyIndexHeight);
-	void extractIPImage(cv::Mat img, std::vector<cv::Point> &srcContours, cv::Mat &png);
-	
+		const BYTE* pBodyIndexBuffer, int nBodyIndexWidth, int nBodyIndexHeight);	
 };
 
