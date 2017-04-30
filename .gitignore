@@ -20,3 +20,5 @@ lib/3rdParty
 *.opensdf
 *.suo
 *.opensdf
+*.db
+*.opendb

@@ -22,11 +22,7 @@ int main()
 		imshow("result1", result1);
 		char c = waitKey(1);
 		if (c == 27 || c == 'q')
-			break;
-
-		
-		
-	
+			break;	
 
 	}
     return 0;

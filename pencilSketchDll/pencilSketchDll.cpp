@@ -32,8 +32,7 @@ extern "C" __declspec(dllexport)
 void processRGBATexture(Color_32 *pTexImg, int width, int height, Color_32 *pFilterTexture)
 {
 	using namespace cv;
-	memset(pFilterTexture, 0, width*height * sizeof(Color_32));
-
+	
 	if (!gInit)
 	{
 		//initKinect();
@@ -57,33 +56,50 @@ void processRGBATexture(Color_32 *pTexImg, int width, int height, Color_32 *pFil
 	if (!hasBody)
 		return;
 
+	memset(pFilterTexture, 255, width*height * sizeof(Color_32));
+
 	Mat grayImg;
-	cvtColor(gKinectCropper.mOutBodyImg, grayImg, COLOR_RGBA2GRAY);
+	cvtColor(gKinectCropper.mOutputClr, grayImg, COLOR_RGBA2GRAY);
 
 	PencilSketchFilter sketchFilter;	
 	Mat tempFiltered;
 	sketchFilter.processImage(grayImg, tempFiltered);
+	//imshow("f2", tempFiltered);
+	Mat filterClr;
+	cvtColor(tempFiltered, filterClr, CV_GRAY2BGR);
+	for (int i = 0; i < gKinectCropper.mSrcContours.size(); i++)
+		drawContours(filterClr, gKinectCropper.mSrcContours, i, Scalar(0, 0, 0), 1);
+
+	//imshow("f1", filterClr);
+	cvtColor(filterClr, tempFiltered, CV_BGR2GRAY);
 	
-	Mat bodyPng = gKinectCropper.mOutBodyImg.clone();
-	for (int r = 0; r < height; r++)
+	Mat bodyPng = Mat::zeros(tempFiltered.size(), CV_8UC4);
+	for (int r = 0; r < bodyPng.rows; r++)
 	{
 		uchar *pDst = bodyPng.ptr<uchar>(r);
 		uchar *pSrc = tempFiltered.ptr<uchar>(r);
-		for (int c = 0; c < width; c++)
+		uchar *pMask = gKinectCropper.mOutputMask.ptr<uchar>(r);
+		for (int c = 0; c < bodyPng.cols; c++)
 		{
+			if (pMask[c] == 0)
+			{
+				memset(pDst + 4 * c, 255, 3);				
+				pDst[4 * c + 3] = 0;
+			}
+			else
+			{
+				memset(pDst + 4 * c, pSrc[c], 3);
+				pDst[4 * c + 3] = 255;
+			}
 			//update R/G/B
-			pDst[4 * c + 0] = pSrc[c];
+			/*pDst[4 * c + 0] = pSrc[c];
 			pDst[4 * c + 1] = pSrc[c];
-			pDst[4 * c + 2] = pSrc[c];
+			pDst[4 * c + 2] = pSrc[c];*/
 		}
 	}
 
 	Mat filterImgOut(Size(width, height), CV_8UC4, (uchar*)pFilterTexture);
 	resize(bodyPng, filterImgOut, filterImgOut.size());
-
-	//imshow("bodypng", bodyPng);
-
-	//printf("has body ...............\n");
 
 }
 extern "C" __declspec(dllexport)
@@ -115,7 +131,7 @@ void processGrayImg(unsigned char *pGrayImg, int width, int height, unsigned cha
 	if (hasBody)
 	{
 		Mat grayImg;
-		cvtColor(gKinectCropper.mOutBodyImg, grayImg, COLOR_RGBA2GRAY);
+		cvtColor(gKinectCropper.mOutputClr, grayImg, COLOR_RGBA2GRAY);
 
 		PencilSketchFilter sketchFilter;
 		Mat filterImgOut(Size(width,height), CV_8UC1, pFilterImg);

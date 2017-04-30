@@ -37,35 +37,38 @@ void PencilSketchFilter::gradientImage(Mat grayImg,Mat &gradImg)
 void PencilSketchFilter::processImage(cv::Mat srcImg, cv::Mat &pencilImg)
 {
 
-	Mat grayImg = srcImg;
-	//cvtColor(srcImg,grayImg,COLOR_BGR2GRAY);
+	Mat grayImg = srcImg;;
+	//cvtColor(srcImg, grayImg, COLOR_BGR2GRAY);
 
 	Mat ivtImg;
-	addWeighted(grayImg,-1,NULL,0,255,ivtImg);	
-	GaussianBlur(ivtImg,ivtImg,Size(11,11),0); 
-	
-	Mat edge; 
-	gradientImage(ivtImg,edge);
-	
-	pencilImg = grayImg.clone();
-	for (int y=0; y<grayImg.rows; y++)  
-	{  
-		uchar* pSrc  = grayImg.ptr<uchar>(y);  
-		uchar* pInv  = ivtImg.ptr<uchar>(y);  
-		uchar *pEdge = edge.ptr<uchar>(y);
-		uchar* pDst  = pencilImg.ptr<uchar>(y);  
+	addWeighted(grayImg, -1, NULL, 0, 255, ivtImg);
+	GaussianBlur(ivtImg, ivtImg, Size(7, 7), 0);
+
+	Mat edge;
+	gradientImage(ivtImg, edge);
+	Mat gEdge;
+	GaussianBlur(edge, gEdge, Size(3, 3), 0);
+
+	pencilImg = grayImg.clone();	
+	for (int y = 0; y<grayImg.rows; y++)
+	{
+		uchar* pSrc = grayImg.ptr<uchar>(y);
+		uchar* pInv = ivtImg.ptr<uchar>(y);
+		uchar *pEdge = gEdge.ptr<uchar>(y);
+		uchar* pDst = pencilImg.ptr<uchar>(y);
 		
-		for (int x=0; x<grayImg.cols; x++)  
-		{  
-			int tmp0=pSrc[x];  
-			int tmp1=pInv[x];  
-			int edgeVal = pEdge[x];			
-			int resultVal = tmp0+(tmp0*tmp1)/(256-tmp1) - edgeVal;
-			if(resultVal>255)
+		for (int x = 0; x<grayImg.cols; x++)
+		{
+			int tmp0 = pSrc[x];
+			int tmp1 = pInv[x];
+			int edgeVal = pEdge[x];
+			int resultVal = tmp0 + (tmp0*tmp1) / (256 - tmp1) - edgeVal * 3;
+			if (resultVal>255)
 				resultVal = 255;
-			if(resultVal <0)
-				resultVal=0;
-			pDst[x] =resultVal;  
-		}  
-	}  
+			if (resultVal <0)
+				resultVal = 0;
+			pDst[x] = resultVal;
+		
+		}
+	}
 }
